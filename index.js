@@ -20,8 +20,8 @@ async function run() {
         await client.connect();
         const database = client.db('produst_two')
         const productsCollection = database.collection("items")
-
-        app.post('/items', async (req, res) => {
+        //    post all data
+        app.post('/additems', async (req, res) => {
             const item = req.body;
             const result = await productsCollection.insertOne(item)
             console.log(result);
@@ -29,6 +29,17 @@ async function run() {
             )
 
         })
+
+
+        // get all data
+        app.get("/allitems", async (req, res) => {
+            const result = await productsCollection.find({}).toArray();
+            res.send(result);
+        });
+
+
+
+
 
     }
     finally {
