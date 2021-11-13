@@ -22,6 +22,8 @@ async function run() {
         const database = client.db('produst_two')
         const productsCollection = database.collection("items")
         const ordersCollection = client.db("produst_two").collection("orders");
+        const usersCollection = client.db("produst_two").collection("users");
+        const reviewCollection = client.db("produst_two").collection("review");
         //    post all data
         app.post('/additems', async (req, res) => {
             const item = req.body;
@@ -65,6 +67,39 @@ async function run() {
                 .toArray();
             res.send(result);
         });
+
+        // review postin the server site
+        app.post("/addServiceReview", async (req, res) => {
+            const result = await reviewCollection.insertOne(req.body);
+            res.send(result);
+        });
+
+        // get ting email
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+
+        })
+
+
+
+        //  make admin
+
+        app.put("/makeAdmin", async (req, res) => {
+            const filter = { email: req.body.email };
+            const result = await usersCollection.find(filter).toArray();
+            // if (result) {
+            //     const documents = await usersCollection.updateOne(filter, {
+            //         $set: { role: "admin" },
+            //     });
+            //     console.log(documents);
+            // }
+        });
+
+
+
+
 
 
 
