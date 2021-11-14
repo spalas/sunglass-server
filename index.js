@@ -74,27 +74,52 @@ async function run() {
             res.send(result);
         });
 
-        // get ting email
+
+
+        // get user register email and name
+
         app.post('/users', async (req, res) => {
-            const user = req.body;
-            const result = await usersCollection.insertOne(user);
-            res.json(result);
+            const result = await usersCollection.insertOne(req.body);
+            res.send(result);
 
         })
+
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            console.log('put', user);
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
+
+
 
 
 
         //  make admin
 
-        app.put("/makeAdmin", async (req, res) => {
-            const filter = { email: req.body.email };
-            const result = await usersCollection.find(filter).toArray();
+        app.put("/users/makeAdmin", async (req, res) => {
+            const user = req.body;
+            console.log("put".user);
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } }
+
+            const result = await usersCollection.updateOne(filter, updateDoc);
             // if (result) {
-            //     const documents = await usersCollection.updateOne(filter, {
+            //     const bosss = await usersCollection.updateOne(filter, {
             //         $set: { role: "admin" },
             //     });
-            //     console.log(documents);
+            //     console.log(bosss);
             // }
+            // else {
+            //     const role = "admin";
+            //     const result3 = await usersCollection.insertOne(req.body.email, {
+            //         role: role,
+            //     });
+            // }
+            // console.log(result);
         });
 
 
